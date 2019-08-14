@@ -1,0 +1,41 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{{ page.title ?: site.title }}</title>
+  <meta name="description" content="{{ page.description ?: site.description }}">
+
+  <script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="shortcut icon" href="/img/favicon.png">
+
+  {% block head %}
+  {% endblock %}
+</head>
+
+<body class="{{ page.class }}" data-path="{{ page.path }}">
+  <div id="main-wrapper">
+    <!-- Header -->
+    {% block header %}
+      {% include 'views/header.twig' %}
+    {% endblock %}
+
+    <!-- Page Content -->
+    <main id="page-container" class="page-container">
+      {% block content %}
+      {% endblock %}
+    </main> <!-- end #page-container .page-container -->
+
+    <!-- Footer -->
+    {% block footer %}
+      {% include 'views/footer.twig' %}
+    {% endblock %}
+  </div> <!-- end #main-wrapper -->
+
+  <script src="/dist/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "name": "twig19",
+  "version": "1.0.0",
+  "description": "Scaffolding for twig sites using Gulp.",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:lab19digital/twig19.git"
+  },
+  "author": "Lab19 Digital Limited",
+  "license": "ISC",
+  "homepage": "https://github.com/lab19digital/twig19",
+  "scripts": {
+    "build": "gulp build",
+    "start": "gulp php"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "autoprefixer": "^9.6.1",
+    "babel-loader": "^8.0.6",
+    "browser-sync": "^2.26.7",
+    "expose-loader": "^0.7.5",
+    "gulp": "^4.0.2",
+    "gulp-connect-php": "^1.0.3",
+    "gulp-notify": "^3.2.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-watch": "^5.0.1",
+    "path": "^0.12.7",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.39.2",
+    "webpack-merge": "^4.2.1",
+    "webpack-stream": "^5.2.1"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "core-js": "3",
+    "jquery": "^3.4.1",
+    "jquery-easing": "0.0.1",
+    "popper.js": "^1.15.0"
+  }
+}
