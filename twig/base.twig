@@ -11,13 +11,13 @@
   <script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
 
   <link rel="stylesheet" href="/dist/main.css">
-  <link rel="shortcut icon" href="/img/favicon.png">
+  <link rel="shortcut icon" href="{{ site.favicon }}">
 
   {% block head %}
   {% endblock %}
 </head>
 
-<body class="{{ page.class }}" data-path="{{ page.path }}">
+<body class="{{ page.class }}" data-path="{{ site.path }}">
   <div id="main-wrapper">
     <!-- Header -->
     {% block header %}

@@ -1,5 +1,13 @@
 <?php
 
+  $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http');
+  $site_url =  $protocol . '://' . $_SERVER['HTTP_HOST'];
+  $current_path = $_SERVER['REQUEST_URI'];
+
+  $site['base_url'] = $site_url . '/';
+  $site['url'] = $site_url . $current_path;
+  $site['path'] = $current_path;
+
   require 'vendor/autoload.php';
 
 	// Twig environment
@@ -19,9 +27,9 @@
   function route($request) {
     global $twig, $context;
 
-    $template = 'twig/pages/' . $request->name . '.twig';
+    $template = 'pages/' . $request->name . '.twig';
 
-    if (!file_exists($template)) {
+    if (!file_exists('twig/' . $template)) {
       header('HTTP/1.0 404 Not Found');
 
       $data = 'context/data/pages/404.php';
@@ -39,7 +47,6 @@
     if (file_exists($data)) {
       $context['page'] = require $data;
       $context['page']['class'] = 'page-' . $request->name;
-      $context['page']['path'] = '/' . $request->name . '/';
     }
 
     return $twig->render($template, $context);
@@ -54,7 +61,6 @@
     if (file_exists($data)) {
       $context['page'] = require $data;
       $context['page']['class'] = 'page-home';
-      $context['page']['path'] = '/';
     }
 
     return $twig->render('pages/home.twig', $context);
