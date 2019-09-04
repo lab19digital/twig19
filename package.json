@@ -31,13 +31,14 @@
     "gulp-watch": "^5.0.1",
     "path": "^0.12.7",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.39.2",
-    "webpack-merge": "^4.2.1",
+    "webpack": "^4.39.3",
+    "webpack-merge": "^4.2.2",
     "webpack-stream": "^5.2.1"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
     "core-js": "3",
+    "flickity": "^2.2.1",
     "jquery": "^3.4.1",
     "jquery-easing": "0.0.1",
     "popper.js": "^1.15.0"
