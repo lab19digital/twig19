@@ -14,6 +14,12 @@ $(document).ready(() => {
   };
 
   const s = Site.vars;
+
+
+  // Debug
+  if (window.location.hostname === 'localhost' || window.location.hostname.endsWith('.test')) {
+    s.body.addClass('debug');
+  }
 });
 
 export default Site;

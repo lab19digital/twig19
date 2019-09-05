@@ -6,7 +6,9 @@
     'favicon' => 'img/favicon.png',
     'base_url' => $site['base_url'],
     'url' => $site['url'],
-    'path' => $site['path']
+    'template' => [
+      'url' => $site['template_url']
+    ]
   ];
 
   return $data;

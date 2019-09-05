@@ -10,14 +10,19 @@
 
   <script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
 
-  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="/dist/main.css?v={{ cache_var }}">
   <link rel="shortcut icon" href="{{ site.favicon }}">
+
+  <script>
+    window.siteUrl  = '{{ site.base_url }}';
+    window.themeUrl = '{{ site.template.url  }}';
+  </script>
 
   {% block head %}
   {% endblock %}
 </head>
 
-<body class="{{ page.class }}" data-path="{{ site.path }}">
+<body class="{{ page.class }}" data-path="{{ page.path }}">
   <div id="main-wrapper">
     <!-- Header -->
     {% block header %}
@@ -36,6 +41,6 @@
     {% endblock %}
   </div> <!-- end #main-wrapper -->
 
-  <script src="/dist/main.js"></script>
+  <script src="/dist/main.js?v={{ cache_var }}"></script>
 </body>
 </html>

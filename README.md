@@ -18,3 +18,12 @@ The site data is in the `context` folder, you can add data globally or page spec
 To add data globally follow the same structure as in `site.php` and require the file inside `context.php`.  
 
 To add data just for a specific page create a new file with the same name as the `route` and follow the same structure as in `home.php`.
+
+# Compile Twig to HTML
+
+`php html-compiler.php`  
+
+### Options
+- `--url=` - The url or path of the website. Default is __'\'__.  
+- `--template-url=` - The url or path of the template. Default is the same as the __url__.  
+- `--output-dir=` - Where to output the compiled html files. Deafult is the current directory.  
