@@ -10,6 +10,7 @@ For watching and compiling source files.
 `gulp build` - compile production ready files (minified & autoprefixed)  
 `gulp php` - (default task) run the server and watch for files changes  
 `gulp proxy` - run BrowserSync proxying a local url, you need to modify `browserSyncProxy` setting
+`gulp compile` - build the full website using the twig to html compiler.
 
 # Site Data
 
@@ -24,6 +25,7 @@ To add data just for a specific page create a new file with the same name as the
 `php html-compiler.php`  
 
 ### Options
-- `--url=` - The url or path of the website. Default is __'\'__.  
-- `--template-url=` - The url or path of the template. Default is the same as the __url__.  
-- `--output-dir=` - Where to output the compiled html files. Deafult is the current directory.  
+- `--url=` - the url or path of the website. Default is __'\'__.  
+- `--template-url=` - the url or path of the template. Default is the same as the __url__.  
+- `--output-dir=` - where to output the compiled html files. Deafult is the current directory.  
+- `--page-in-subfolder=` (bool) - set to __true__ if you would like each page to be placed in a subfolder, example _public/about/index.html_ instead of _public/about.html_.  
