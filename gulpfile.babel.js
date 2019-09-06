@@ -1,5 +1,9 @@
 // Dependencies
 import { series, parallel, watch, src, dest } from 'gulp';
+import path from 'path';
+import inquirer from 'inquirer';
+import del from 'del';
+import shell from 'gulp-shell';
 import connectPHP from 'gulp-connect-php';
 import plumber from 'gulp-plumber';
 import notify from 'gulp-notify';
@@ -16,17 +20,18 @@ import { create as browserSyncCreate } from 'browser-sync';
 
 
 // Settings
-const browserSync = browserSyncCreate();
-const browserSyncProxy = 'local-url.test';
-
-
 const basePath = __dirname;
 const nodePath = `${basePath}/node_modules`;
 const destPath = `${basePath}/dist`;
 
+const baseName = path.basename(basePath);
+
+console.log(`Base name: ${baseName}`);
 console.log(`Base path: ${basePath}`);
 console.log(`Build path: ${destPath}`);
 
+const browserSync = browserSyncCreate();
+const browserSyncProxy = `${baseName}.test`;
 
 
 // DEV TASKS
@@ -127,16 +132,73 @@ function proxy_fn() {
   });
 }
 
+// Compile
+let cHtmlUrl, cHtmlOutputDir, cHtmlPageInSubfolder;
+
+function cHtmlPrompt() {
+  return inquirer.prompt([{
+    type: 'input',
+    name: 'url',
+    message: 'What is the url or path of the website?',
+    default: ``
+  }, {
+    type: 'input',
+    name: 'output-dir',
+    message: 'Output directory?',
+    default: 'public'
+  }, {
+    type: 'confirm',
+    name: 'page-in-subfolder',
+    message: 'Output every page in it\'s own subfolder?',
+    default: false
+  }]).then(answers => {
+    cHtmlUrl = answers['url'];
+    cHtmlOutputDir = `${basePath}/${answers['output-dir']}`;
+    cHtmlPageInSubfolder = answers['page-in-subfolder'];
+  });
+}
+
+function cHtmlClean() {
+  return del([
+    `${basePath}/dist/**/*`,
+    `${cHtmlOutputDir}/**/*`
+  ]);
+}
+
+function cHtmlShell(done) {
+  const cmd = [
+    `php html-compiler.php --url=${cHtmlUrl} --output-dir=${cHtmlOutputDir} --page-in-subfolder=${cHtmlPageInSubfolder}`,
+    `echo test`
+  ];
+
+  shell.task([cmd])();
+
+  done();
+}
+
+function cHtmlFiles() {
+  return src([
+    `${basePath}/dist/**/*`,
+    `${basePath}/fonts/**/*`,
+    `${basePath}/img/**/*`
+  ], {
+    base: basePath
+  })
+  .pipe(dest(cHtmlOutputDir));
+}
+
 const proxy = parallel(proxy_fn, watch_files);
 const php = parallel(php_fn, watch_files);
 const build = parallel(scss_prod, js_prod);
+const compile = series(cHtmlPrompt, cHtmlClean, build, cHtmlFiles, cHtmlShell);
 
 export {
   scss_prod,
   js_prod,
   php,
   proxy,
-  build
+  build,
+  compile
 };
 
 export default php;

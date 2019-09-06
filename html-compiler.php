@@ -7,22 +7,26 @@
     echo "\e[1m" . "\nCompiling HTML...\n\n";
   }
 
-  $options = getopt(null, array('url:', 'template-url:', 'output-dir:'));
+  $options = getopt(null, array('url:', 'template-url:', 'output-dir:', 'page-in-subfolder:'));
 
-  $site_url = '/';
-  $template_url = $site_url;
-  $output_folder = '.';
-
+  $site_url = '';
   if (isset($options['url']) && !empty($options['url'])) {
-    $site_url = $options['url'];
+    $site_url = rtrim($options['url'], '/');
   }
 
+  $template_url = $site_url;
   if (isset($options['template-url']) && !empty($options['template-url'])) {
     $template_url = $options['template-url'];
   }
 
+  $output_folder = '.';
   if (isset($options['output-dir']) && !empty($options['output-dir'])) {
     $output_folder = $options['output-dir'];
+  }
+
+  $pageInSubfolder = false;
+  if (isset($options['page-in-subfolder']) && !empty($options['page-in-subfolder'])) {
+    $pageInSubfolder = $options['page-in-subfolder'] === 'true' ? true : false;
   }
 
   $cache_var = time();
@@ -47,9 +51,23 @@
 
   foreach($pages as $page) {
     $route = basename($page, '.twig');
-    $file_name = ($route === 'home') ? 'index' : $route;
-
     $current_path = "/$route/";
+
+    if ($pageInSubfolder && $route !== 'home') {
+      $file_name = 'index';
+      $page_output_folder = "$output_folder/$route";
+
+      if (!file_exists($page_output_folder)) {
+        mkdir($page_output_folder, 0777);
+      }
+    } elseif ($route === 'home') {
+      $current_path = '/';
+      $file_name = 'index';
+      $page_output_folder = $output_folder;
+    } else {
+      $file_name = $route;
+      $page_output_folder = $output_folder;
+    }
 
     $site['url'] = $site_url . $current_path;
 
@@ -67,9 +85,13 @@
 
     $html = $twig->render($template, $context);
 
-    $html_file = fopen("$output_folder/$file_name.html", 'w') or die("\e[31m\e[1m" . "\nERROR\n");
+    $html_file = fopen("$page_output_folder/$file_name.html", 'w') or die("\e[31m\e[1m" . "\nERROR\n");
     fwrite($html_file, $html);
     fclose($html_file);
 
-    echo "\e[32m\xE2\x9C\x94\e[0m" . " $output_folder/\e[1m$file_name\e[0m.html\n";
+    echo "\e[32m\xE2\x9C\x94\e[0m" . " $page_output_folder/$file_name.html\n";
   }
+
+  echo "\n";
+
+  return true;
