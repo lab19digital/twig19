@@ -1,7 +1,5 @@
 <?php
 
-  $cache_var = 1;
-
   $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http');
   $site_url =  $protocol . '://' . $_SERVER['HTTP_HOST'];
   $current_path = $_SERVER['REQUEST_URI'];
@@ -17,7 +15,13 @@
   $twig = new Twig_Environment($loader);
 
   $context = require 'context/context.php';
-  $context['cache_var'] = $cache_var;
+  
+  if(file_exists('build-version.php')){
+    require "build-version.php";
+    $context['cache_var'] = BUILD_VERSION;
+  } else {
+    $context['cache_var'] = time();
+  }
 
 	// Simple router library
 	$klein = new \Klein\Klein();
