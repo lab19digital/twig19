@@ -15,13 +15,20 @@
   $twig = new Twig_Environment($loader);
 
   $context = require 'context/context.php';
-  
-  if(file_exists('build-version.php')){
-    require "build-version.php";
-    $context['cache_var'] = BUILD_VERSION;
-  } else {
-    $context['cache_var'] = time();
+
+  // Build Version
+  $build_version = time();
+  $build_version_file = '/build-version.txt';
+
+  if (file_exists($build_version_file)) {
+    $file_contents = trim(file_get_contents($build_version_file));
+
+    if (isset($file_contents) && !empty($file_contents)) {
+      $build_version = $file_contents;
+    }
   }
+
+  $context['BUILD_VERSION'] = $build_version;
 
 	// Simple router library
 	$klein = new \Klein\Klein();

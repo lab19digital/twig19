@@ -10,7 +10,7 @@
 
   <script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
 
-  <link rel="stylesheet" href="/dist/main.css?v={{ cache_var }}">
+  <link rel="stylesheet" href="/dist/main.css?v={{ BUILD_VERSION }}">
   <link rel="shortcut icon" href="{{ site.favicon }}">
 
   <script>
@@ -41,6 +41,6 @@
     {% endblock %}
   </div> <!-- end #main-wrapper -->
 
-  <script src="/dist/main.js?v={{ cache_var }}"></script>
+  <script src="/dist/main.js?v={{ BUILD_VERSION }}"></script>
 </body>
 </html>

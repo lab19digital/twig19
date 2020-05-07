@@ -29,7 +29,7 @@
     $pageInSubfolder = $options['page-in-subfolder'] === 'true' ? true : false;
   }
 
-  $cache_var = time();
+  $BUILD_VERSION = time();
 
 
 	// Twig environment
@@ -73,7 +73,7 @@
 
     $template = 'pages/' . $route . '.twig';
     $context = require 'context/context.php';
-    $context['cache_var'] = $cache_var;
+    $context['BUILD_VERSION'] = $BUILD_VERSION;
     $data = 'context/data/pages/' . $route . '.php';
 
     if (file_exists($data)) {

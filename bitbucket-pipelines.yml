@@ -9,8 +9,7 @@ definitions:
               ssh lab19@$LAB19_STAGE_IP "mkdir -p /var/www/$BITBUCKET_BRANCH-$BITBUCKET_REPO_SLUG/ &&
               cd /var/www/$BITBUCKET_BRANCH-$BITBUCKET_REPO_SLUG/ &&
               git init . &&
-              git pull $BITBUCKET_GIT_SSH_ORIGIN $BITBUCKET_BRANCH &&
-              echo \"<?php define('BUILD_VERSION', '$BITBUCKET_BRANCH-$BITBUCKET_COMMIT'); ?>\" > build-version.php"
+              git pull $BITBUCKET_GIT_SSH_ORIGIN $BITBUCKET_BRANCH
     - parallel:
       - step:
           name: Composer install
@@ -19,7 +18,7 @@ definitions:
             - ssh lab19@$LAB19_STAGE_IP "[ -f /var/www/$BITBUCKET_BRANCH-$BITBUCKET_REPO_SLUG/composer.json ] && cd /var/www/$BITBUCKET_BRANCH-$BITBUCKET_REPO_SLUG && composer install || echo 'No composer.json file found'"
       - step:
           name: Yarn install
-          image: node:10.15.0
+          image: node:12.16.3
           script:
             - yarn install
             - yarn run build

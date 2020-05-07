@@ -1,5 +1,9 @@
 import $ from 'jquery';
 import 'jquery-easing/jquery.easing.1.3';
+// import 'waypoints/lib/jquery.waypoints.min';
+
+// import Animations from './components/animations';
+// import ScrollTo from './components/scroll-to';
 
 const Site = {};
 
@@ -14,6 +18,10 @@ $(document).ready(() => {
   };
 
   const s = Site.vars;
+
+
+  // Animations(s);
+  // ScrollTo(s, id);
 
 
   // Debug

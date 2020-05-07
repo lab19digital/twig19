@@ -1,19 +1,20 @@
 // Dependencies
-import { series, parallel, watch, src, dest } from 'gulp';
-import path from 'path';
-import inquirer from 'inquirer';
-import del from 'del';
-import shell from 'gulp-shell';
-import connectPHP from 'gulp-connect-php';
-import plumber from 'gulp-plumber';
-import notify from 'gulp-notify';
-import sass from 'gulp-sass';
-import postcss from 'gulp-postcss';
-import autoprefixer from 'autoprefixer';
-import sourcemaps from 'gulp-sourcemaps';
-import webpack from 'webpack';
-import webpackStream from 'webpack-stream';
-import webpackConfigDEV from './webpack.dev';
+import gulp              from 'gulp';
+import path              from 'path';
+import rename            from 'gulp-rename';
+import connectPHP        from 'gulp-connect-php';
+import plumber           from 'gulp-plumber';
+import notify            from 'gulp-notify';
+// import colors            from 'colors/safe';
+import sass              from 'gulp-sass';
+import postcss           from 'gulp-postcss';
+import postcssScss       from 'postcss-scss';
+import postcssBemLinter  from 'postcss-bem-linter';
+import autoprefixer      from 'autoprefixer';
+import sourcemaps        from 'gulp-sourcemaps';
+import webpack           from 'webpack';
+import webpackStream     from 'webpack-stream';
+import webpackConfigDEV  from './webpack.dev';
 import webpackConfigPROD from './webpack.prod';
 import { create as browserSyncCreate } from 'browser-sync';
 
@@ -21,17 +22,38 @@ import { create as browserSyncCreate } from 'browser-sync';
 
 // Settings
 const basePath = __dirname;
-const nodePath = `${basePath}/node_modules`;
+const nodePath = path.resolve(__dirname, 'node_modules');
 const destPath = `${basePath}/dist`;
 
 const baseName = path.basename(basePath);
 
-console.log(`Base name: ${baseName}`);
-console.log(`Base path: ${basePath}`);
-console.log(`Build path: ${destPath}`);
+// console.log(colors.bold('Base name: ') + baseName);
+// console.log(colors.bold('Base path: ') + basePath);
+// console.log(colors.bold('Build path: ') + destPath);
 
 const browserSync = browserSyncCreate();
 const browserSyncProxy = `${baseName}.test`;
+
+const bemUtilitySelectors = /^\.u-/;
+const bemIgnoreSelectors = [
+  /^\.has-/,
+  /\.container/,
+  /\.row/,
+  /\.col/,
+  /#{\$this}/
+];
+
+
+
+// PROJECT SETUP
+// =======================================================================
+
+// Copy 'pre-commit' git hook
+function copy_git_pre_commit_hook() {
+  return gulp.src('git-pre-commit-hook')
+    .pipe(rename('pre-commit'))
+    .pipe(gulp.dest('./.git/hooks'));
+}
 
 
 // DEV TASKS
@@ -53,8 +75,19 @@ function reload(done) {
 
 // SCSS
 function scss() {
-  return src(`${basePath}/scss/**/*.scss`)
+  return gulp.src(`${basePath}/scss/**/*.scss`)
     .pipe(plumber(plumberHandler))
+    .pipe(postcss([
+      postcssBemLinter({
+        preset: 'bem',
+        implicitComponents: `scss/blocks/**/*.scss`,
+        implicitUtilities: `scss/utils/**/*.scss`,
+        utilitySelectors: bemUtilitySelectors,
+        ignoreSelectors: bemIgnoreSelectors
+      })
+    ], {
+      syntax: postcssScss
+    }))
     .pipe(sourcemaps.init())
     .pipe(sass({
       precision: 10,
@@ -64,12 +97,23 @@ function scss() {
       autoprefixer({ cascade: false })
     ]))
     .pipe(sourcemaps.write())
-    .pipe(dest(destPath))
+    .pipe(gulp.dest(destPath))
     .pipe(browserSync.stream());
 }
 
 function scss_prod() {
-  return src(`${basePath}/scss/**/*.scss`)
+  return gulp.src(`${basePath}/scss/**/*.scss`)
+    .pipe(postcss([
+      postcssBemLinter({
+        preset: 'bem',
+        implicitComponents: `scss/blocks/**/*.scss`,
+        implicitUtilities: `scss/utils/**/*.scss`,
+        utilitySelectors: bemUtilitySelectors,
+        ignoreSelectors: bemIgnoreSelectors
+      })
+    ], {
+      syntax: postcssScss
+    }))
     .pipe(sass({
       precision: 10,
       outputStyle: 'compressed',
@@ -78,30 +122,30 @@ function scss_prod() {
     .pipe(postcss([
       autoprefixer({ cascade: false })
     ]))
-    .pipe(dest(destPath));
+    .pipe(gulp.dest(destPath));
 }
 
 // JS
 function js() {
-  return src(`${basePath}/js/main.js`)
+  return gulp.src(`${basePath}/js/main.js`)
     .pipe(plumber(plumberHandler))
     .pipe(webpackStream(webpackConfigDEV, webpack))
-    .pipe(dest(destPath));
+    .pipe(gulp.dest(destPath));
 }
 
 function js_prod() {
-  return src(`${basePath}/js/main.js`)
+  return gulp.src(`${basePath}/js/main.js`)
     .pipe(webpackStream(webpackConfigPROD, webpack))
-    .pipe(dest(destPath));
+    .pipe(gulp.dest(destPath));
 }
 
 // Watch
 function watch_files() {
-  watch(`${basePath}/scss/**/*.scss`, scss);
-  watch(`${basePath}/js/**/*.js`, series(js, reload));
-  watch(`${basePath}/**/*.twig`, reload);
-  watch(`${basePath}/**/*.php`, reload);
-  watch(`${basePath}/**/*.html`, reload);
+  gulp.watch(`${basePath}/scss/**/*.scss`, scss);
+  gulp.watch(`${basePath}/js/**/*.js`, gulp.series(js, reload));
+  gulp.watch(`${basePath}/**/*.twig`, reload);
+  gulp.watch(`${basePath}/**/*.php`, reload);
+  gulp.watch(`${basePath}/**/*.html`, reload);
 }
 
 // PHP
@@ -132,73 +176,19 @@ function proxy_fn() {
   });
 }
 
-// Compile
-let cHtmlUrl, cHtmlOutputDir, cHtmlPageInSubfolder;
 
-function cHtmlPrompt() {
-  return inquirer.prompt([{
-    type: 'input',
-    name: 'url',
-    message: 'What is the url or path of the website?',
-    default: ``
-  }, {
-    type: 'input',
-    name: 'output-dir',
-    message: 'Output directory?',
-    default: 'public'
-  }, {
-    type: 'confirm',
-    name: 'page-in-subfolder',
-    message: 'Output every page in it\'s own subfolder?',
-    default: false
-  }]).then(answers => {
-    cHtmlUrl = answers['url'];
-    cHtmlOutputDir = `${basePath}/${answers['output-dir']}`;
-    cHtmlPageInSubfolder = answers['page-in-subfolder'];
-  });
-}
+const php = gulp.parallel(php_fn, watch_files);
+const proxy = gulp.parallel(proxy_fn, watch_files);
+const build = gulp.parallel(scss_prod, js_prod);
 
-function cHtmlClean() {
-  return del([
-    `${basePath}/dist/**/*`,
-    `${cHtmlOutputDir}/**/*`
-  ]);
-}
-
-function cHtmlShell(done) {
-  const cmd = [
-    `php html-compiler.php --url=${cHtmlUrl} --output-dir=${cHtmlOutputDir} --page-in-subfolder=${cHtmlPageInSubfolder}`,
-    `echo test`
-  ];
-
-  shell.task([cmd])();
-
-  done();
-}
-
-function cHtmlFiles() {
-  return src([
-    `${basePath}/dist/**/*`,
-    `${basePath}/fonts/**/*`,
-    `${basePath}/img/**/*`
-  ], {
-    base: basePath
-  })
-  .pipe(dest(cHtmlOutputDir));
-}
-
-const proxy = parallel(proxy_fn, watch_files);
-const php = parallel(php_fn, watch_files);
-const build = parallel(scss_prod, js_prod);
-const compile = series(cHtmlPrompt, cHtmlClean, build, cHtmlFiles, cHtmlShell);
 
 export {
+  copy_git_pre_commit_hook,
   scss_prod,
   js_prod,
   php,
   proxy,
-  build,
-  compile
-};
+  build
+}
 
 export default php;
