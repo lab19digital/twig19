@@ -12,7 +12,8 @@
   "scripts": {
     "build": "gulp build",
     "dev": "gulp php",
-    "hook": "gulp copy_git_pre_commit_hook"
+    "compile": "gulp compile",
+    "hooks": "gulp copy_git_pre_commit_hook"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
