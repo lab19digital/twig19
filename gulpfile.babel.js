@@ -1,6 +1,9 @@
 // Dependencies
 import gulp              from 'gulp';
 import path              from 'path';
+import inquirer          from 'inquirer';
+import del               from 'del';
+import shell             from 'gulp-shell';
 import rename            from 'gulp-rename';
 import connectPHP        from 'gulp-connect-php';
 import plumber           from 'gulp-plumber';
@@ -176,10 +179,65 @@ function proxy_fn() {
   });
 }
 
+// Compile
+let cHtmlUrl, cHtmlOutputDir, cHtmlPageInSubfolder;
+
+function cHtmlPrompt() {
+  return inquirer.prompt([{
+    type: 'input',
+    name: 'url',
+    message: 'What is the url or path of the website?',
+    default: ``
+  }, {
+    type: 'input',
+    name: 'output-dir',
+    message: 'Output directory?',
+    default: 'public'
+  }, {
+    type: 'confirm',
+    name: 'page-in-subfolder',
+    message: 'Output every page in it\'s own subfolder?',
+    default: false
+  }]).then(answers => {
+    cHtmlUrl = answers['url'];
+    cHtmlOutputDir = `${basePath}/${answers['output-dir']}`;
+    cHtmlPageInSubfolder = answers['page-in-subfolder'];
+  });
+}
+
+function cHtmlClean() {
+  return del([
+    `${basePath}/dist/**/*`,
+    `${cHtmlOutputDir}/**/*`
+  ]);
+}
+
+function cHtmlShell(done) {
+  const cmd = [
+    `php html-compiler.php --url=${cHtmlUrl} --output-dir=${cHtmlOutputDir} --page-in-subfolder=${cHtmlPageInSubfolder}`
+  ];
+
+  shell.task([cmd])();
+
+  done();
+}
+
+function cHtmlFiles() {
+  return gulp.src([
+    `${basePath}/dist/**/*`,
+    `${basePath}/fonts/**/*`,
+    `${basePath}/img/**/*`
+  ], {
+    base: basePath
+  })
+  .pipe(gulp.dest(cHtmlOutputDir));
+}
+
 
 const php = gulp.parallel(php_fn, watch_files);
 const proxy = gulp.parallel(proxy_fn, watch_files);
 const build = gulp.parallel(scss_prod, js_prod);
+const compile = gulp.series(cHtmlPrompt, cHtmlClean, build, cHtmlFiles, cHtmlShell);
 
 
 export {
@@ -188,7 +246,8 @@ export {
   js_prod,
   php,
   proxy,
-  build
+  build,
+  compile
 }
 
 export default php;

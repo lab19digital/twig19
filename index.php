@@ -10,9 +10,9 @@
 
   require 'vendor/autoload.php';
 
-	// Twig environment
-	$loader = new Twig_Loader_Filesystem(array('twig'));
-  $twig = new Twig_Environment($loader);
+  // Twig environment
+  $loader = new \Twig\Loader\FilesystemLoader(['twig']);
+  $twig = new \Twig\Environment($loader);
 
   $context = require 'context/context.php';
 
@@ -30,10 +30,10 @@
 
   $context['BUILD_VERSION'] = $build_version;
 
-	// Simple router library
-	$klein = new \Klein\Klein();
+  // Simple router library
+  $klein = new \Klein\Klein();
 
-	// Respond to these routes.
+  // Respond to these routes.
   $klein->respond('GET', '/', 'home');
   $klein->respond('GET', '/[:name]', 'force_trailing_slash');
   $klein->respond('GET', '/[:name]/', 'route');

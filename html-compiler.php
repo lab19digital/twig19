@@ -19,7 +19,7 @@
     $template_url = $options['template-url'];
   }
 
-  $output_folder = '.';
+  $output_folder = 'public';
   if (isset($options['output-dir']) && !empty($options['output-dir'])) {
     $output_folder = $options['output-dir'];
   }
@@ -32,11 +32,11 @@
   $BUILD_VERSION = time();
 
 
-	// Twig environment
+  // Twig environment
   require 'vendor/autoload.php';
 
-	$loader = new Twig_Loader_Filesystem(array('twig', 'twig/pages'));
-  $twig = new Twig_Environment($loader);
+  $loader = new \Twig\Loader\FilesystemLoader(array('twig', 'twig/pages'));
+  $twig = new \Twig\Environment($loader);
 
 
   // Compile pages

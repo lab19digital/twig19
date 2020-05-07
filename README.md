@@ -27,5 +27,5 @@ To add data just for a specific page create a new file with the same name as the
 ### Options
 - `--url=` - the url or path of the website. Default is __'\'__.  
 - `--template-url=` - the url or path of the template. Default is the same as the __url__.  
-- `--output-dir=` - where to output the compiled html files. Deafult is the current directory.  
+- `--output-dir=` - where to output the compiled html files. Deafult is `public`.  
 - `--page-in-subfolder=` (bool) - set to __true__ if you would like each page to be placed in a subfolder, example _public/about/index.html_ instead of _public/about.html_.  
