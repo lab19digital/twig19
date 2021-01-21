@@ -1,13 +1,16 @@
-@mixin grid-gutter-width($width: $grid-gutter-width) {
-  .row {
-    margin-left: -($width / 2);
-    margin-right: -($width / 2);
-
-    & > .col,
-    & > [class^="col-"],
-    & > [class*=" col-"] {
-      padding-left: ($width / 2);
-      padding-right: ($width / 2);
-    }
-  }
+// Transitions
+//
+// Usage:
+// @include transitions('color, background-color')
+// @include transitions('color, background-color', .5s)
+@mixin transitions(
+  $property: $transition-property,
+  $duration: $transition-duration,
+  $easing: $transition-easing,
+  $delay: $transition-delay
+) {
+  transition-property: unquote($property);
+  transition-duration: $duration;
+  transition-timing-function: $easing;
+  transition-delay: $delay;
 }

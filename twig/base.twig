@@ -5,42 +5,42 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{{ page.title ?: site.title }}</title>
-  <meta name="description" content="{{ page.description ?: site.description }}">
+  <title>{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
 
   <script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
 
-  <link rel="stylesheet" href="/dist/main.css?v={{ BUILD_VERSION }}">
-  <link rel="shortcut icon" href="{{ site.favicon }}">
+  <link rel="stylesheet" href="{{ site.template_url }}/dist/app.css?v={{ BUILD_VERSION }}">
 
   <script>
-    window.siteUrl  = '{{ site.base_url }}';
-    window.themeUrl = '{{ site.template.url  }}';
+    window.lazySizesConfig = window.lazySizesConfig || {};
+    lazySizesConfig.loadMode = 1;
+    lazySizesConfig.preloadAfterLoad = true;
   </script>
 
   {% block head %}
   {% endblock %}
 </head>
 
-<body class="{{ page.class }}" data-path="{{ page.path }}">
+<body>
   <div id="main-wrapper">
     <!-- Header -->
-    {% block header %}
-      {% include 'views/header.twig' %}
+    {% block page_header %}
+      {% include 'components/c-header.twig' %}
     {% endblock %}
 
-    <!-- Page Content -->
+    <!-- Main -->
     <main id="page-container" class="page-container">
-      {% block content %}
+      {% block page_content %}
       {% endblock %}
     </main> <!-- end #page-container .page-container -->
 
     <!-- Footer -->
-    {% block footer %}
-      {% include 'views/footer.twig' %}
+    {% block page_footer %}
+      {% include 'components/c-footer.twig' %}
     {% endblock %}
   </div> <!-- end #main-wrapper -->
 
-  <script src="/dist/main.js?v={{ BUILD_VERSION }}"></script>
+  <script src="{{ site.template_url }}/dist/app.js?v={{ BUILD_VERSION }}"></script>
 </body>
 </html>

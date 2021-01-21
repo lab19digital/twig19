@@ -1,0 +1,35 @@
+@mixin generate-spacer-classes($breakpoint) {
+  @each $property, $class in $spacer-classes {
+    @each $size in $spacer-scale {
+      $selector: '';
+
+      @if is-list($class) {
+        @each $item in $class {
+          @if ($selector == '') {
+            $selector: '.u-#{$breakpoint}#{$item}-#{$size}';
+          } @else {
+            $selector: '#{$selector}, .u-#{$breakpoint}#{$item}-#{$size}';
+          }
+        }
+      } @else {
+        $selector: '.u-#{$breakpoint}#{$class}-#{$size}';
+      }
+
+      #{unquote($selector)} {
+        #{$property}: spacer($size) !important;
+      }
+    }
+  }
+}
+
+@each $breakpoint, $breakpoint-value in $grid-breakpoints {
+  @include media-breakpoint-up($breakpoint) {
+    @if $breakpoint == xs {
+      $breakpoint: null;
+    } @else {
+      $breakpoint: '#{$breakpoint}-';
+    }
+
+    @include generate-spacer-classes($breakpoint);
+  }
+}

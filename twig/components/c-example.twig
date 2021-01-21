@@ -1,0 +1,22 @@
+{% from 'mixins.twig' import fa %}
+
+<section class="c-example {{ classes }}">
+  {% if image %}
+    <img src="{{ image.src }}" alt="{{ image.alt }}">
+  {% endif %}
+
+  {% if title %}
+    <h1 class="c-example__title">{{ title }}</h1>
+  {% endif %}
+
+  {% if text %}
+    <p class="c-example__text">{{ text }}</p>
+  {% endif %}
+
+  {% if button %}
+    <button class="c-example__button">
+      {{ button }}
+      <span style="display: inline-block; width: 20px;">{{ fa('regular/bell') }}</span>
+    </button>
+  {% endif %}
+</section>

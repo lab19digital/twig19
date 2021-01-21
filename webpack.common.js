@@ -1,8 +1,8 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   entry: {
-    main: `./js/main.js`
+    app: `./js/app.js`
   },
   output: {
     filename: '[name].js',
@@ -12,16 +12,20 @@ module.exports = {
     rules: [
       {
         test: /\.js?$/,
-        exclude:  [/node_modules/],
+        exclude: [/node_modules/],
         loader: 'babel-loader'
-      }, {
+      },
+      {
         test: require.resolve('jquery'),
-        loader: 'expose-loader?jQuery!expose-loader?$'
+        loader: 'expose-loader',
+        options: {
+          exposes: ['$', 'jQuery']
+        }
       }
     ]
   },
   resolve: {
     modules: ['node_modules'],
-    extensions: ['.js', '.json', '.jsx']
+    extensions: ['.js']
   }
 }

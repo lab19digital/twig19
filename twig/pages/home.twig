@@ -1,20 +1,13 @@
-{% extends 'base.twig' %}
+{% extends 'layouts/default.twig' %}
+
+{% block sidebar %}
+  Sidebar
+{% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h1>h1. Heading</h1>
-    <h2>h2. Heading</h2>
-    <h3>h3. Heading</h3>
-    <h4>h4. Heading</h4>
-    <h5>h5. Heading</h5>
-    <h6>h6. Heading</h6>
+  <h1>Home Page</h1>
 
-    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint <abbr title="HyperText Markup Language" class="initialism">HTML</abbr> occaecati cupiditate non provident, similique <mark>highlight</mark> sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis <del>deleted text</del> voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+  <hr>
 
-    <p>At vero eos et <ins>addition to the document</ins> accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt <s>no longer accurate</s> in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
-
-    <p>At vero <small>fine print</small> eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem <abbr title="attribute">attr</abbr> rerum facilis est et expedita distinctio. Itaque earum rerum hic <a href="#">link</a> tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis <u>render as underlined</u> doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis <strong>bold text</strong> praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est <em>italicized text</em> laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus <a href="#">maiores alias consequatur aut perferendis doloribus</a> asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-
-    <p>At vero eos et accusamus et iusto odio dignissimos ducimus. For example, <code>&lt;section&gt;</code> should be wrapped as inline qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident. To switch directories, type <kbd>cd</kbd> followed by the name of the directory. Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis. To edit settings, press <kbd><kbd>ctrl</kbd> + <kbd>,</kbd></kbd> est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias <var>y</var> = <var>m</var><var>x</var> + <var>b</var> excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi id est laborum et dolorum fuga. Et harum quidem rerum <samp>this text is meant to be treated as sample output from a computer program</samp> facilis est et expedita distinctio.</p>
-  </div>
+  {% include 'components/c-example.twig' with component['c-example'] only %}
 {% endblock %}

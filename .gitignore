@@ -28,4 +28,8 @@ Thumbs.db
 *~
 
 node_modules
+dist
+public
 vendor
+!js/vendor
+!scss/vendor

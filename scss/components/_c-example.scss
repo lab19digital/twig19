@@ -1,0 +1,42 @@
+.c-example {
+  margin: spacing(20, 0);
+
+  &__title {
+    margin: spacing(0, 0, 3);
+    font-size: rem(32);
+    @include transitions('color', 1s);
+  }
+
+  &__text {
+    color: pink;
+  }
+
+  &__button {
+    padding: spacing(2, 5);
+    font-size: rem(12);
+    background-color: coral;
+    @include transitions('background-color');
+  }
+
+  &--primary {
+    .c-example__title {
+      color: purple;
+    }
+
+    .c-example__button {
+      background-color: aquamarine;
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    &__title {
+      margin-bottom: spacing(5);
+      font-size: rem(40);
+    }
+
+    &__button {
+      padding: spacing(3, 6);
+      font-size: $font-size-base;
+    }
+  }
+}

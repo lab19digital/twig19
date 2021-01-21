@@ -1,93 +1,92 @@
 <?php
 
-  $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http');
-  $site_url =  $protocol . '://' . $_SERVER['HTTP_HOST'];
-  $current_path = $_SERVER['REQUEST_URI'];
+$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http');
+$site_url =  $protocol . '://' . $_SERVER['HTTP_HOST'];
+$current_path = $_SERVER['REQUEST_URI'];
 
-  $site['url'] = $site_url . $current_path;
-  $site['base_url'] = rtrim($site_url, '/') . '/';
-  $site['template_url'] = $site_url;
+$site['url'] = $site_url . $current_path;
+$site['base_url'] = rtrim($site_url, '/') . '/';
+$site['template_url'] = $site_url;
 
-  require 'vendor/autoload.php';
+require 'vendor/autoload.php';
 
-  // Twig environment
-  $loader = new \Twig\Loader\FilesystemLoader(['twig']);
-  $twig = new \Twig\Environment($loader);
+// Twig environment
+$loader = new \Twig\Loader\FilesystemLoader(['twig', 'svgs']);
+$twig = new \Twig\Environment($loader, [
+  'debug' => true
+]);
+$twig->addExtension(new \Twig\Extension\DebugExtension());
 
-  $context = require 'context/context.php';
+$context = require 'context/context.php';
 
-  // Build Version
-  $build_version = time();
-  $build_version_file = '/build-version.txt';
+// Build Version
+$build_version = time();
 
-  if (file_exists($build_version_file)) {
-    $file_contents = trim(file_get_contents($build_version_file));
+$context['BUILD_VERSION'] = $build_version;
 
-    if (isset($file_contents) && !empty($file_contents)) {
-      $build_version = $file_contents;
-    }
+// Simple router library
+$klein = new \Klein\Klein();
+
+// Respond to these routes.
+$klein->respond('GET', '/', 'home_route');
+$klein->respond('GET', '/[:name]', 'force_trailing_slash');
+$klein->respond('GET', '/[:name]/', 'route');
+$klein->respond('GET', '/component/[:name]', 'force_trailing_slash');
+$klein->respond('GET', '/component/[:name]/', 'component_route');
+$klein->dispatch();
+
+function force_trailing_slash($request) {
+  $params = $request->paramsNamed();
+  header('Location: ' . $params[0] . '/');
+  exit;
+}
+
+function route($request) {
+  global $twig, $context;
+
+  $template = 'pages/' . $request->name . '.twig';
+
+  if (!file_exists('twig/' . $template) || $request->name === 'home') {
+    header('HTTP/1.0 404 Not Found');
+
+    return $twig->render('pages/404.twig', $context);
   }
 
-  $context['BUILD_VERSION'] = $build_version;
+  return $twig->render($template, $context);
+}
 
-  // Simple router library
-  $klein = new \Klein\Klein();
+function component_route($request) {
+  global $twig, $context;
 
-  // Respond to these routes.
-  $klein->respond('GET', '/', 'home');
-  $klein->respond('GET', '/[:name]', 'force_trailing_slash');
-  $klein->respond('GET', '/[:name]/', 'route');
-  $klein->dispatch();
+  $template = 'components/' . $request->name . '.twig';
 
-  function force_trailing_slash($request) {
-    header('Location: /' . $request->name . '/');
-    exit;
+  if (!file_exists('twig/' . $template)) {
+    header('HTTP/1.0 404 Not Found');
+
+    return $twig->render('pages/404.twig', $context);
   }
 
-  function route($request) {
-    global $twig, $context, $current_path;
+  $context['component_name'] = $request->name;
 
-    $template = 'pages/' . $request->name . '.twig';
+  $data = 'context/data/components/' . $request->name . '.php';
 
-    if (!file_exists('twig/' . $template)) {
-      header('HTTP/1.0 404 Not Found');
-
-      $data = 'context/data/pages/404.php';
-
-      if (file_exists($data)) {
-        $context['page'] = require $data;
-      }
-
-      $context['page']['class'] = 'page-404';
-      $context['page']['path'] = $current_path;
-
-      return $twig->render('pages/404.twig', $context);
-    }
-
-    $data = 'context/data/pages/' . $request->name . '.php';
-
-    if (file_exists($data)) {
-      $context['page'] = require $data;
-    }
-
-    $context['page']['class'] = 'page-' . $request->name;
-    $context['page']['path'] = $current_path;
-
-    return $twig->render($template, $context);
+  if (file_exists($data)) {
+    $context['component_data'] = require $data;
   }
 
-  // Special routes
-  function home() {
-    global $twig, $context, $current_path;
+  return $twig->render('component.twig', $context);
+}
 
-    $data = 'context/data/pages/home.php';
+function home_route() {
+  global $twig, $context;
 
-    if (file_exists($data)) {
-      $context['page'] = require $data;
-    }
+  $template = 'pages/home.twig';
 
-    $context['page']['class'] = 'page-home';
-    $context['page']['path'] = $current_path;
+  if (!file_exists('twig/' . $template)) {
+    header('HTTP/1.0 404 Not Found');
 
-    return $twig->render('pages/home.twig', $context);
+    return $twig->render('pages/404.twig', $context);
   }
+
+  return $twig->render($template, $context);
+}

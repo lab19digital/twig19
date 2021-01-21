@@ -1,0 +1,17 @@
+{% extends 'base.twig' %}
+
+{% block page_header %}
+{% endblock %}
+
+{% block page_content %}
+  <div class="component-dev-wrapper">
+    <!-- begin {{ component_name }} component -->
+    {% if component_data is defined %}
+      {% include 'components/' ~ component_name ~ '.twig' with component_data %}
+    {% endif %}
+    <!-- end {{ component_name }} component -->
+  </div>
+{% endblock %}
+
+{% block page_footer %}
+{% endblock %}

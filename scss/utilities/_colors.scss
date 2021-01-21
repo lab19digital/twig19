@@ -1,0 +1,9 @@
+@each $name, $value in $theme-colors {
+  .u-color-#{$name} {
+    color: $value !important;
+  }
+
+  .u-bg-color-#{$name} {
+    background-color: $value !important;
+  }
+}

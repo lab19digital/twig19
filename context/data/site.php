@@ -1,9 +1,8 @@
 <?php
 
-  $data = [
+  $data_site = [
     'title' => 'Site Title',
-    'description' => '',
-    'favicon' => 'img/favicon.png',
+    'description' => 'Site Description',
     'base_url' => $site['base_url'],
     'url' => $site['url'],
     'template' => [
@@ -11,4 +10,4 @@
     ]
   ];
 
-  return $data;
+  return $data_site;

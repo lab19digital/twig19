@@ -7,9 +7,8 @@
 @import 'bootstrap/scss/mixins';
 @import 'mixins';
 
-
-// BOOTSTRAP
-// @import 'bootstrap/scss/print';
+// Bootstrap
+@import 'bootstrap/scss/root';
 @import 'bootstrap/scss/reboot';
 // @import 'bootstrap/scss/type';
 // @import 'bootstrap/scss/images';
@@ -35,30 +34,49 @@
 // @import 'bootstrap/scss/media';
 // @import 'bootstrap/scss/list-group';
 // @import 'bootstrap/scss/close';
+// @import 'bootstrap/scss/toasts';
 // @import 'bootstrap/scss/modal';
 // @import 'bootstrap/scss/tooltip';
 // @import 'bootstrap/scss/popover';
 // @import 'bootstrap/scss/carousel';
-@import 'bootstrap/scss/utilities';
+// @import 'bootstrap/scss/spinners';
+// @import 'bootstrap/scss/utilities';
+// @import 'bootstrap/scss/utilities/align';
+// @import 'bootstrap/scss/utilities/background';
+// @import 'bootstrap/scss/utilities/borders';
+// @import 'bootstrap/scss/utilities/clearfix';
+@import 'bootstrap/scss/utilities/display';
+// @import 'bootstrap/scss/utilities/embed';
+@import 'bootstrap/scss/utilities/flex';
+// @import 'bootstrap/scss/utilities/float';
+// @import 'bootstrap/scss/utilities/interactions';
+// @import 'bootstrap/scss/utilities/overflow';
+// @import 'bootstrap/scss/utilities/position';
+@import 'bootstrap/scss/utilities/screenreaders';
+// @import 'bootstrap/scss/utilities/shadows';
+// @import 'bootstrap/scss/utilities/sizing';
+// @import 'bootstrap/scss/utilities/spacing';
+// @import 'bootstrap/scss/utilities/stretched-link';
+// @import 'bootstrap/scss/utilities/text';
+// @import 'bootstrap/scss/utilities/visibility';
+// @import 'bootstrap/scss/print';
 
-
-// VENDOR
+// Vendor
 // @import 'vendor/flickity';
 
-
-// UTILITIES
-
-
-// PARTIALS
+// Partials
+// @import 'partials/fonts';
 @import 'partials/scaffolding';
+@import 'partials/type';
 
+// Components
+@import 'components/c-example';
 
-// BLOCKS
+// Utilities
+// @import 'utilities/spacing';
+// @import 'utilities/colors';
 
-
-// PAGES
-
-
+// DEBUG
 body.debug {
   &:after {
     position: fixed;
@@ -74,7 +92,7 @@ body.debug {
     z-index: 999999999;
 
     @each $breakpoint, $value in $grid-breakpoints {
-      @include media-breakpoint-only($breakpoint) {
+      @include media-breakpoint-up($breakpoint) {
         content: '#{$breakpoint}';
       }
     }

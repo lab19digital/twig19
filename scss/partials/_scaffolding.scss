@@ -4,10 +4,44 @@ body {
 }
 
 #main-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.page-container {
+  margin-bottom: auto;
+}
+
+.component-dev-wrapper {
+  min-height: calc(100vh - 2.5rem);
+  padding: 1.25rem;
   overflow: hidden;
 }
 
 img {
   max-width: 100%;
   height: auto;
+}
+
+button {
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+a,
+button {
+  &:focus {
+    outline: rem(2) solid rgba($primary, 0.5);
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
+
+  &:focus-visible {
+    outline: rem(2) solid rgba($primary, 0.5);
+  }
 }
