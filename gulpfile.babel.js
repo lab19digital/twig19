@@ -9,7 +9,8 @@ import connectPHP from 'gulp-connect-php'
 import plumber from 'gulp-plumber'
 import notify from 'gulp-notify'
 // import colors from 'colors/safe';
-import sass from 'gulp-sass'
+import dartSass from 'sass'
+import gulpSass from 'gulp-sass'
 import postcss from 'gulp-postcss'
 // import postcssScss from 'postcss-scss';
 // import postcssBemLinter from 'postcss-bem-linter';
@@ -20,6 +21,8 @@ import webpackStream from 'webpack-stream'
 import webpackConfigDEV from './webpack.dev'
 import webpackConfigPROD from './webpack.prod'
 import { create as browserSyncCreate } from 'browser-sync'
+
+const sass = gulpSass(dartSass)
 
 // Settings
 const basePath = __dirname
